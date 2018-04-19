@@ -20,7 +20,7 @@ func GetPeople(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePerson(w http.ResponseWriter, r *http.Request) {
-	people = append(people, Person{ID: "1", Firstname: "John", Lastname: "Doe" })
+	people = append(people, Person{ID: "1", Firstname: "Anton", Lastname: "Toxa" })
 	json.NewEncoder(w).Encode(people)
 }
 
