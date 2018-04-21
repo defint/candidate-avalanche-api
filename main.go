@@ -16,8 +16,9 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Logger())
 
-	router.GET("/", services.CandidateGet)
-	router.GET("/add", services.CandidateCreate)
+	router.GET("/candidate", services.CandidateList)
+	router.PUT("/candidate", services.CandidateCreate)
+	router.GET("/candidate/:id", services.CandidateItem)
 
 	router.Run(":" + port)
 }
