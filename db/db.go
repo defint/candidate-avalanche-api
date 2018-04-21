@@ -31,7 +31,7 @@ func Connect() {
 		log.Fatal(err)
 	}
 
-	database := session.DB("heroku_27s1h5cn")
+	database := session.DB(mongoDb)
 
 	Database = database
 }

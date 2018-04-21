@@ -30,6 +30,15 @@ func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
 	return model
 }
 
+// ShowCandidates godoc
+// @Summary Show a list of candidates
+// @Description Show a list of candidates
+// @ID candidates-list
+// @Accept  json
+// @Produce  json
+// @Success 200 {array} models.Candidate
+// @Failure 400 {string} string
+// @Router /candidate [get]
 func CandidateList(context *gin.Context) {
 	collection := getCollection()
 
@@ -43,6 +52,16 @@ func CandidateList(context *gin.Context) {
 	context.JSON(200, result)
 }
 
+// ShowCandidate godoc
+// @Summary Show a candidate
+// @Description Show a candidate
+// @ID candidate-item
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Candidate ID"
+// @Success 200 {object} models.Candidate
+// @Failure 400 {string} string
+// @Router /candidate/{id} [get]
 func CandidateItem(context *gin.Context) {
 	collection := getCollection()
 	result := models.Candidate{}
@@ -63,6 +82,15 @@ func CandidateItem(context *gin.Context) {
 	context.JSON(200, result)
 }
 
+// CreateCandidate godoc
+// @Summary Create a candidate
+// @Description Create a candidate
+// @ID candidate-create
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} models.Candidate
+// @Failure 400 {string} string
+// @Router /candidate [put]
 func CandidateCreate(context *gin.Context) {
 	collection := getCollection()
 	id := bson.NewObjectId()
@@ -77,6 +105,16 @@ func CandidateCreate(context *gin.Context) {
 	context.JSON(200, model)
 }
 
+// UpdateCandidate godoc
+// @Summary Update a candidate
+// @Description Update a candidate
+// @ID candidate-update
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Candidate ID"
+// @Success 200 {object} models.Candidate
+// @Failure 400 {string} string
+// @Router /candidate/{id} [post]
 func CandidateUpdate(context *gin.Context) {
 	collection := getCollection()
 	id := getIdFromContext(context)
@@ -95,6 +133,16 @@ func CandidateUpdate(context *gin.Context) {
 	context.JSON(200, model)
 }
 
+// DeleteCandidate godoc
+// @Summary Delete a candidate
+// @Description Delete a candidate
+// @ID candidate-delete
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Candidate ID"
+// @Success 200 {string} string
+// @Failure 400 {string} string
+// @Router /candidate/{id} [delete]
 func CandidateDelete(context *gin.Context) {
 	collection := getCollection()
 	id := getIdFromContext(context)
