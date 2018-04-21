@@ -19,6 +19,8 @@ func main() {
 	router.GET("/candidate", services.CandidateList)
 	router.PUT("/candidate", services.CandidateCreate)
 	router.GET("/candidate/:id", services.CandidateItem)
+	router.POST("/candidate/:id", services.CandidateUpdate)
+	router.DELETE("/candidate/:id", services.CandidateDelete)
 
 	router.Run(":" + port)
 }

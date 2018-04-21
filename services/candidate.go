@@ -13,6 +13,23 @@ func getCollection() *mgo.Collection {
 	return db.Database.C("Col1")
 }
 
+func getIdFromContext(context *gin.Context) bson.ObjectId {
+	id := context.Param("id")
+
+	if !bson.IsObjectIdHex(id) {
+		context.JSON(400, "Invalid ID")
+		return ""
+	}
+
+	return bson.ObjectIdHex(id)
+}
+
+func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
+	name := context.PostForm("name")
+	model := models.Candidate{ID: id, Name: name}
+	return model
+}
+
 func CandidateList(context *gin.Context) {
 	collection := getCollection()
 
@@ -30,14 +47,13 @@ func CandidateItem(context *gin.Context) {
 	collection := getCollection()
 	result := models.Candidate{}
 
-	id := context.Param("id")
+	id := getIdFromContext(context)
 
-	if !bson.IsObjectIdHex(id) {
-		context.JSON(400, "Invalid ID")
+	if id == "" {
 		return
 	}
 
-	err := collection.FindId(bson.ObjectIdHex(id)).One(&result)
+	err := collection.FindId(id).One(&result)
 
 	if err != nil {
 		context.JSON(400, "Candidate not found.")
@@ -49,10 +65,9 @@ func CandidateItem(context *gin.Context) {
 
 func CandidateCreate(context *gin.Context) {
 	collection := getCollection()
+	id := bson.NewObjectId()
 
-	name := context.PostForm("name")
-
-	model := models.Candidate{ID: bson.NewObjectId(), Name: name}
+	model := makeModel(id, context)
 	err := collection.Insert(&model)
 
 	if err != nil {
@@ -60,4 +75,39 @@ func CandidateCreate(context *gin.Context) {
 	}
 
 	context.JSON(200, model)
+}
+
+func CandidateUpdate(context *gin.Context) {
+	collection := getCollection()
+	id := getIdFromContext(context)
+
+	if id == "" {
+		return
+	}
+
+	model := makeModel(id, context)
+	err := collection.UpdateId(id, &model)
+
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(200, model)
+}
+
+func CandidateDelete(context *gin.Context) {
+	collection := getCollection()
+	id := getIdFromContext(context)
+
+	if id == "" {
+		return
+	}
+
+	err := collection.RemoveId(id)
+
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(200, id)
 }
