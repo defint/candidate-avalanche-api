@@ -2,11 +2,10 @@ package services
 
 import (
 	"candidate-avalanche-api/db"
-	"candidate-avalanche-api/models"
-
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"candidate-avalanche-api/models"
 )
 
 func getCollection() *mgo.Collection {

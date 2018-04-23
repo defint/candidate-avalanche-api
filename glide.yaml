@@ -1,0 +1,12 @@
+package: candidate-avalanche-api
+import:
+- package: github.com/gin-gonic/gin
+  version: ^1.2.0
+- package: github.com/globalsign/mgo
+  subpackages:
+  - bson
+- package: github.com/swaggo/gin-swagger
+  subpackages:
+  - swaggerFiles
+- package: github.com/swaggo/swag
+  version: ^1.1.1
