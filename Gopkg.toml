@@ -50,5 +50,5 @@
   unused-packages = true
 
 [metadata.heroku]
-  root-package = "candidate-acalanche-api"
+  root-package = "candidate-avalanche-api"
   ensure = "false"
