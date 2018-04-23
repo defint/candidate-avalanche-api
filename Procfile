@@ -1,1 +1,1 @@
-web: go-getting-started
+web: candidate-avalanche-api
