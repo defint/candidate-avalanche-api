@@ -2,10 +2,11 @@ package services
 
 import (
 	"candidate-avalanche-api/db"
+	"candidate-avalanche-api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	"candidate-avalanche-api/models"
+	"strconv"
 )
 
 func getCollection() *mgo.Collection {
@@ -25,7 +26,11 @@ func getIdFromContext(context *gin.Context) bson.ObjectId {
 
 func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
 	name := context.PostForm("name")
-	model := models.Candidate{ID: id, Name: name}
+	position := context.PostForm("position")
+	salary := context.PostForm("salary")
+	status := context.PostForm("status")
+	salaryInt, _ := strconv.Atoi(salary)
+	model := models.Candidate{ID: id, Name: name, Position: position, Salary: salaryInt, Status: status}
 	return model
 }
 
@@ -157,4 +162,42 @@ func CandidateDelete(context *gin.Context) {
 	}
 
 	context.JSON(200, id)
+}
+
+// UpdateCandidateStatus godoc
+// @Summary Update a status of candidate
+// @Description Update a status of candidate
+// @ID candidate-status-update
+// @Accept  json
+// @Produce  json
+// @Param id path string true "Candidate ID"
+// @Success 200 {object} models.Candidate
+// @Failure 400 {string} string
+// @Router /candidate/{id}/status [post]
+func CandidateStatusUpdate(context *gin.Context) {
+	collection := getCollection()
+	id := getIdFromContext(context)
+
+	if id == "" {
+		return
+	}
+
+	result := models.Candidate{}
+	err := collection.FindId(id).One(&result)
+
+	if err != nil {
+		context.JSON(400, "Candidate not found.")
+		return
+	}
+
+	status := context.PostForm("status")
+	result.Status = status
+	err = collection.UpdateId(id, &result)
+
+	if err != nil {
+		context.JSON(400, "Server error")
+		return
+	}
+
+	context.JSON(200, result)
 }

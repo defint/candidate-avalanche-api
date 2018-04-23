@@ -35,6 +35,7 @@ func main() {
 	router.GET("/candidate/:id", services.CandidateItem)
 	router.POST("/candidate/:id", services.CandidateUpdate)
 	router.DELETE("/candidate/:id", services.CandidateDelete)
+	router.POST("/candidate/:id/status", services.CandidateStatusUpdate)
 
 	router.Run(":" + port)
 }
