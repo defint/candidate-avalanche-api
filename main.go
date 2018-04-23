@@ -6,6 +6,7 @@ import (
 	"candidate-avalanche-api/db"
 	_ "candidate-avalanche-api/docs"
 	"candidate-avalanche-api/services"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
@@ -24,6 +25,8 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
+
+	router.Use(cors.Default())
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
