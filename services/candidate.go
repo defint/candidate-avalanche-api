@@ -24,10 +24,17 @@ func getIdFromContext(context *gin.Context) bson.ObjectId {
 }
 
 func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
+	collection := getCollection()
 	result := models.Candidate{}
-	context.Bind(&result)
-	result.ID = id
-	return result
+	_ = collection.FindId(id).One(&result)
+
+	model := models.Candidate{}
+	context.Bind(&model)
+	model.ID = id
+	model.History = result.History
+	model.Status = result.Status
+
+	return model
 }
 
 // ShowCandidates godoc
@@ -212,6 +219,12 @@ func CandidateStatusUpdate(context *gin.Context) {
 
 	statusModel := models.Status{}
 	context.Bind(&statusModel)
+	result.History = append(result.History, models.History{
+		Reason:     statusModel.Reason,
+		StatusFrom: result.Status,
+		StatusTo:   statusModel.Status,
+	})
+
 	result.Status = statusModel.Status
 	err = collection.UpdateId(id, &result)
 

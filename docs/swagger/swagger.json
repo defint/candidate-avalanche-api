@@ -272,6 +272,12 @@
         "models.Candidate": {
             "type": "object",
             "properties": {
+                "history": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.History"
+                    }
+                },
                 "id": {
                     "type": "string"
                 },
@@ -289,9 +295,29 @@
                 }
             }
         },
+        "models.History": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "reason": {
+                    "type": "string"
+                },
+                "status_from": {
+                    "type": "string"
+                },
+                "status_to": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Status": {
             "type": "object",
             "properties": {
+                "reason": {
+                    "type": "string"
+                },
                 "status": {
                     "type": "string"
                 }

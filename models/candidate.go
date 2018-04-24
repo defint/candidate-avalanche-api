@@ -10,4 +10,5 @@ type Candidate struct {
 	Position string        `json:"position" bson:"position"`
 	Salary   int           `json:"salary" bson:"salary"`
 	Status   string        `json:"status" bson:"status"`
+	History  []History     `json:"history" bson:"history"`
 }

@@ -1,6 +1,10 @@
 definitions:
   models.Candidate:
     properties:
+      history:
+        items:
+          $ref: '#/definitions/models.History'
+        type: array
       id:
         type: string
       name:
@@ -12,8 +16,21 @@ definitions:
       status:
         type: string
     type: object
+  models.History:
+    properties:
+      date:
+        type: string
+      reason:
+        type: string
+      status_from:
+        type: string
+      status_to:
+        type: string
+    type: object
   models.Status:
     properties:
+      reason:
+        type: string
       status:
         type: string
     type: object
