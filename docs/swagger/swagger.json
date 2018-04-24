@@ -238,6 +238,16 @@
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "description": "Status",
+                        "name": "status",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/models.Status"
+                        }
                     }
                 ],
                 "responses": {
@@ -274,6 +284,14 @@
                 "salary": {
                     "type": "integer"
                 },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Status": {
+            "type": "object",
+            "properties": {
                 "status": {
                     "type": "string"
                 }

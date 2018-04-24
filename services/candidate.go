@@ -190,6 +190,7 @@ func CandidatesDelete(context *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Candidate ID"
+// @Param status body models.Status true "Status"
 // @Success 200 {object} models.Candidate
 // @Failure 400 {string} string
 // @Router /candidate/{id}/status [post]
@@ -209,8 +210,9 @@ func CandidateStatusUpdate(context *gin.Context) {
 		return
 	}
 
-	status := context.PostForm("status")
-	result.Status = status
+	statusModel := models.Status{}
+	context.Bind(&statusModel)
+	result.Status = statusModel.Status
 	err = collection.UpdateId(id, &result)
 
 	if err != nil {

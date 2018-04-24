@@ -12,6 +12,11 @@ definitions:
       status:
         type: string
     type: object
+  models.Status:
+    properties:
+      status:
+        type: string
+    type: object
 info:
   contact:
     email: matrenin@ukr.net
@@ -175,6 +180,13 @@ paths:
         name: id
         required: true
         type: string
+      - description: Status
+        in: body
+        name: status
+        required: true
+        schema:
+          $ref: '#/definitions/models.Status'
+          type: object
       produces:
       - application/json
       responses:
