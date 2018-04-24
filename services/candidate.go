@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
-	"strconv"
 )
 
 func getCollection() *mgo.Collection {
@@ -25,13 +24,10 @@ func getIdFromContext(context *gin.Context) bson.ObjectId {
 }
 
 func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
-	name := context.PostForm("name")
-	position := context.PostForm("position")
-	salary := context.PostForm("salary")
-	status := context.PostForm("status")
-	salaryInt, _ := strconv.Atoi(salary)
-	model := models.Candidate{ID: id, Name: name, Position: position, Salary: salaryInt, Status: status}
-	return model
+	result := models.Candidate{}
+	context.Bind(&result)
+	result.ID = id
+	return result
 }
 
 // ShowCandidates godoc
@@ -92,6 +88,7 @@ func CandidateItem(context *gin.Context) {
 // @ID candidate-create
 // @Accept  json
 // @Produce  json
+// @Param candidate body models.Candidate true "Candidate"
 // @Success 200 {object} models.Candidate
 // @Failure 400 {string} string
 // @Router /candidate [put]
@@ -116,6 +113,7 @@ func CandidateCreate(context *gin.Context) {
 // @Accept  json
 // @Produce  json
 // @Param id path string true "Candidate ID"
+// @Param candidate body models.Candidate true "Candidate"
 // @Success 200 {object} models.Candidate
 // @Failure 400 {string} string
 // @Router /candidate/{id} [post]
@@ -162,6 +160,27 @@ func CandidateDelete(context *gin.Context) {
 	}
 
 	context.JSON(200, id)
+}
+
+// DeleteCandidates godoc
+// @Summary Delete all candidates
+// @Description Delete all candidates
+// @ID candidates-delete
+// @Accept  json
+// @Produce  json
+// @Success 200 {string} string
+// @Failure 400 {string} string
+// @Router /candidate [delete]
+func CandidatesDelete(context *gin.Context) {
+	collection := getCollection()
+
+	_, err := collection.RemoveAll(nil)
+
+	if err != nil {
+		panic(err)
+	}
+
+	context.JSON(200, nil)
 }
 
 // UpdateCandidateStatus godoc

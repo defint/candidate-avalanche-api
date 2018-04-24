@@ -22,6 +22,23 @@ info:
   version: "1.0"
 paths:
   /candidate:
+    delete:
+      consumes:
+      - application/json
+      description: Delete all candidates
+      operationId: candidates-delete
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+      summary: Delete all candidates
     get:
       consumes:
       - application/json
@@ -46,6 +63,14 @@ paths:
       - application/json
       description: Create a candidate
       operationId: candidate-create
+      parameters:
+      - description: Candidate
+        in: body
+        name: candidate
+        required: true
+        schema:
+          $ref: '#/definitions/models.Candidate'
+          type: object
       produces:
       - application/json
       responses:
@@ -118,6 +143,13 @@ paths:
         name: id
         required: true
         type: string
+      - description: Candidate
+        in: body
+        name: candidate
+        required: true
+        schema:
+          $ref: '#/definitions/models.Candidate'
+          type: object
       produces:
       - application/json
       responses:
