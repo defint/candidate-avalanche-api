@@ -1,11 +1,13 @@
 package services
 
 import (
+	"candidate-avalanche-api/config"
 	"candidate-avalanche-api/db"
 	"candidate-avalanche-api/models"
 	"github.com/gin-gonic/gin"
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"time"
 )
 
 func getCollection() *mgo.Collection {
@@ -23,16 +25,29 @@ func getIdFromContext(context *gin.Context) bson.ObjectId {
 	return bson.ObjectIdHex(id)
 }
 
-func makeModel(id bson.ObjectId, context *gin.Context) models.Candidate {
-	collection := getCollection()
-	result := models.Candidate{}
-	_ = collection.FindId(id).One(&result)
-
+func makeModel(id bson.ObjectId, context *gin.Context, isNew bool) models.Candidate {
 	model := models.Candidate{}
 	context.Bind(&model)
 	model.ID = id
-	model.History = result.History
-	model.Status = result.Status
+
+	if isNew {
+		model.History = []models.History{
+			{
+				Reason:     "Create new candidate",
+				StatusFrom: "",
+				StatusTo:   config.StatusNew,
+				Date:       time.Now().Format("2006-01-02 15:04:05"),
+			},
+		}
+		model.Status = config.StatusNew
+	} else {
+		collection := getCollection()
+		result := models.Candidate{}
+		_ = collection.FindId(id).One(&result)
+
+		model.History = result.History
+		model.Status = result.Status
+	}
 
 	return model
 }
@@ -103,7 +118,7 @@ func CandidateCreate(context *gin.Context) {
 	collection := getCollection()
 	id := bson.NewObjectId()
 
-	model := makeModel(id, context)
+	model := makeModel(id, context, true)
 	err := collection.Insert(&model)
 
 	if err != nil {
@@ -132,7 +147,7 @@ func CandidateUpdate(context *gin.Context) {
 		return
 	}
 
-	model := makeModel(id, context)
+	model := makeModel(id, context, false)
 	err := collection.UpdateId(id, &model)
 
 	if err != nil {
@@ -223,6 +238,7 @@ func CandidateStatusUpdate(context *gin.Context) {
 		Reason:     statusModel.Reason,
 		StatusFrom: result.Status,
 		StatusTo:   statusModel.Status,
+		Date:       time.Now().Format("2006-01-02 15:04:05"),
 	})
 
 	result.Status = statusModel.Status
