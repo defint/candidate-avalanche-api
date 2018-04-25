@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
+	"time"
 )
 
 // @title Avalanche Candidates API
@@ -26,7 +27,13 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Logger())
 
-	router.Use(cors.Default())
+	config := cors.Config{
+		AllowMethods: []string{"PUT", "PATCH", "POST", "DELETE", "GET", "OPTIONS"},
+		AllowHeaders: []string{"Origin"},
+		MaxAge:       12 * time.Hour,
+	}
+	config.AllowAllOrigins = true
+	router.Use(cors.New(config))
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
